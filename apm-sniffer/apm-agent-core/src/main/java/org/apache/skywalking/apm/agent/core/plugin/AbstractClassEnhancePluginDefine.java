@@ -83,6 +83,7 @@ public abstract class AbstractClassEnhancePluginDefine {
         /**
          * find witness classes for enhance class
          */
+        // 校验见证类是否在classpath中,见证类依赖于应用程序的classpath,如果见证类不存在，则不进行增强
         String[] witnessClasses = witnessClasses();
         if (witnessClasses != null) {
             for (String witnessClass : witnessClasses) {
@@ -92,6 +93,8 @@ public abstract class AbstractClassEnhancePluginDefine {
                 }
             }
         }
+        // 校验见证方法是否在classpath中,见证方法依赖于应用程序的classpath,如果见证方法不存在，则不进行增强
+        // 同名的见证方法可能存在于多个版本的应用程序中,因此需要校验所有见证方法是否存在
         List<WitnessMethod> witnessMethods = witnessMethods();
         if (!CollectionUtil.isEmpty(witnessMethods)) {
             for (WitnessMethod witnessMethod : witnessMethods) {

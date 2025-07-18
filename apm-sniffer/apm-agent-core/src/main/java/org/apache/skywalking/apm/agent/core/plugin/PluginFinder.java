@@ -40,8 +40,11 @@ import static net.bytebuddy.matcher.ElementMatchers.not;
  * AbstractClassEnhancePluginDefine} list.
  */
 public class PluginFinder {
+    // 按类名匹配的插件
     private final Map<String, LinkedList<AbstractClassEnhancePluginDefine>> nameMatchDefine = new HashMap<String, LinkedList<AbstractClassEnhancePluginDefine>>();
+    // 按类结构信息匹配的插件
     private final List<AbstractClassEnhancePluginDefine> signatureMatchDefine = new ArrayList<AbstractClassEnhancePluginDefine>();
+    // 增强引导类的插件
     private final List<AbstractClassEnhancePluginDefine> bootstrapClassMatchDefine = new ArrayList<AbstractClassEnhancePluginDefine>();
     private static boolean IS_PLUGIN_INIT_COMPLETED = false;
 

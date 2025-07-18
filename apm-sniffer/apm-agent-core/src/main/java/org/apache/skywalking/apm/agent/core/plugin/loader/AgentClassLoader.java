@@ -86,6 +86,7 @@ public class AgentClassLoader extends ClassLoader {
         super(parent);
         File agentDictionary = AgentPackagePath.getPath();
         classpath = new LinkedList<>();
+        // 2.1加载插件目录
         Config.Plugin.MOUNT.forEach(mountFolder -> classpath.add(new File(agentDictionary, mountFolder)));
     }
 

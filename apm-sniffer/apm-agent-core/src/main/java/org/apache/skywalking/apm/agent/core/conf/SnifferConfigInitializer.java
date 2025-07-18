@@ -97,7 +97,7 @@ public class SnifferConfigInitializer {
                 LOGGER.error(e, "Failed to parse the agent options, val is {}.", agentOptions);
             }
         }
-
+        // 加载核心配置
         initializeConfig(Config.class);
         // reconfigure logger after config initialization
         configureLogger();
@@ -105,6 +105,7 @@ public class SnifferConfigInitializer {
 
         setAgentVersion();
 
+        // 服务名配置,可通过集群+命名空间进行隔离
         if (StringUtil.isEmpty(Config.Agent.SERVICE_NAME)) {
             throw new ExceptionInInitializerError("`agent.service_name` is missing.");
         } else {

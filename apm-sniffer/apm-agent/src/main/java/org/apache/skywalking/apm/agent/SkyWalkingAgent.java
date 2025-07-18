@@ -75,6 +75,7 @@ public class SkyWalkingAgent {
     public static void premain(String agentArgs, Instrumentation instrumentation) throws PluginException {
         final PluginFinder pluginFinder;
         try {
+            // 1.加载配置
             SnifferConfigInitializer.initializeCoreConfig(agentArgs);
         } catch (Exception e) {
             // try to resolve a new logger, and use the new logger to write the error log here
@@ -92,6 +93,7 @@ public class SkyWalkingAgent {
         }
 
         try {
+            // 2.加载插件
             pluginFinder = new PluginFinder(new PluginBootstrap().loadPlugins());
         } catch (AgentPackageNotFoundException ape) {
             LOGGER.error(ape, "Locate agent.jar failure. Shutting down.");
@@ -102,6 +104,7 @@ public class SkyWalkingAgent {
         }
 
         try {
+            // 注入增强字节码
             installClassTransformer(instrumentation, pluginFinder);
         } catch (Exception e) {
             LOGGER.error(e, "Skywalking agent installed class transformer failure.");
@@ -133,12 +136,14 @@ public class SkyWalkingAgent {
 
         JDK9ModuleExporter.EdgeClasses edgeClasses = new JDK9ModuleExporter.EdgeClasses();
         try {
+            // 增强BootStrap类
             agentBuilder = BootstrapInstrumentBoost.inject(pluginFinder, instrumentation, agentBuilder, edgeClasses);
         } catch (Exception e) {
             throw new Exception("SkyWalking agent inject bootstrap instrumentation failure. Shutting down.", e);
         }
 
         try {
+            // 兼容jdk9+
             agentBuilder = JDK9ModuleExporter.openReadEdge(instrumentation, agentBuilder, edgeClasses);
         } catch (Exception e) {
             throw new Exception("SkyWalking agent open read edge in JDK 9+ failure. Shutting down.", e);
@@ -185,6 +190,7 @@ public class SkyWalkingAgent {
                                                 final JavaModule javaModule,
                                                 final ProtectionDomain protectionDomain) {
             LoadedLibraryCollector.registerURLClassLoader(classLoader);
+            // 过滤匹配的插件
             List<AbstractClassEnhancePluginDefine> pluginDefines = pluginFinder.find(typeDescription);
             if (pluginDefines.size() > 0) {
                 DynamicType.Builder<?> newBuilder = builder;
