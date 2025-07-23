@@ -111,6 +111,7 @@ public class SkyWalkingAgent {
         }
 
         try {
+            // 3.启动上报等核心服务
             ServiceManager.INSTANCE.boot();
         } catch (Exception e) {
             LOGGER.error(e, "Skywalking agent boot failure.");
@@ -150,6 +151,7 @@ public class SkyWalkingAgent {
         }
 
         agentBuilder.type(pluginFinder.buildMatch())
+                    // 注入增强字节码
                     .transform(new Transformer(pluginFinder))
                     .with(AgentBuilder.RedefinitionStrategy.RETRANSFORMATION)
                     .with(new RedefinitionListener())

@@ -70,6 +70,7 @@ public class InstMethodsInterWithOverrideArgs {
      * @throws Exception only throw exception because of zuper.call() or unexpected exception in sky-walking ( This is a
      *                   bug, if anything triggers this condition ).
      */
+    // 通过@RuntimeType注解,能够动态匹配目标类的所有方法,从而进行拦截
     @RuntimeType
     public Object intercept(@This Object obj, @AllArguments Object[] allArguments, @Origin Method method,
         @Morph OverrideCallable zuper) throws Throwable {
