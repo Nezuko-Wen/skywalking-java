@@ -33,6 +33,7 @@ public class Channels<T> {
     public Channels(int channelSize, int bufferSize, IDataPartitioner<T> partitioner, BufferStrategy strategy) {
         this.dataPartitioner = partitioner;
         this.strategy = strategy;
+        // 数据分区
         bufferChannels = new QueueBuffer[channelSize];
         for (int i = 0; i < channelSize; i++) {
             if (BufferStrategy.BLOCKING.equals(strategy)) {

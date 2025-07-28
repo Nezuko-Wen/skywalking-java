@@ -331,6 +331,9 @@ public abstract class AbstractTracingSpan implements AbstractSpan {
         return this;
     }
 
+    /**
+     * 异步存储span数据
+     */
     @Override
     public AbstractSpan asyncFinish() {
         if (!isInAsyncMode) {

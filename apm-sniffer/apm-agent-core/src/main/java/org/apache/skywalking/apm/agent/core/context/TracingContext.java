@@ -467,6 +467,7 @@ public class TracingContext implements AbstractTracerContext {
                 }
                 AgentSo11y.measureTracingContextCompletion(false);
                 TraceSegment finishedSegment = segment.finish(limitMechanismWorking);
+                // 通知TraceSegmentServiceClient上报数据
                 TracingContext.ListenerManager.notifyFinish(finishedSegment);
                 running = false;
             }

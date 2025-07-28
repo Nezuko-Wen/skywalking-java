@@ -31,6 +31,10 @@ import org.apache.skywalking.apm.commons.datacarrier.partition.SimpleRollingPart
 /**
  * DataCarrier main class. use this instance to set Producer/Consumer Model.
  */
+
+/**
+ * 数据缓冲层
+ */
 public class DataCarrier<T> {
     private Channels<T> channels;
     private IDriver driver;
@@ -50,8 +54,11 @@ public class DataCarrier<T> {
 
     public DataCarrier(String name, String envPrefix, int channelSize, int bufferSize, BufferStrategy strategy) {
         this.name = name;
+        // 每个分区的内存大小
         bufferSize = EnvUtil.getInt(envPrefix + "_BUFFER_SIZE", bufferSize);
+        // 缓存的数据分区,提高并发度
         channelSize = EnvUtil.getInt(envPrefix + "_CHANNEL_SIZE", channelSize);
+        // 数据分区
         channels = new Channels<>(channelSize, bufferSize, new SimpleRollingPartitioner<T>(), strategy);
     }
 
@@ -126,6 +133,7 @@ public class DataCarrier<T> {
         if (driver != null) {
             driver.close(channels);
         }
+        // 创建数据采集线程
         driver = new ConsumeDriver<T>(this.name, this.channels, consumer, num, consumeCycle);
         driver.begin(channels);
         return this;

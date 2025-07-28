@@ -45,6 +45,9 @@ import org.apache.skywalking.apm.util.StringUtil;
 
 import static org.apache.skywalking.apm.agent.core.conf.Config.Collector.IS_RESOLVE_DNS_PERIODICALLY;
 
+/**
+ * 建立OAP的gRPC连接
+ */
 @DefaultImplementor
 public class GRPCChannelManager implements BootService, Runnable {
     private static final ILog LOGGER = LogManager.getLogger(GRPCChannelManager.class);
@@ -74,6 +77,7 @@ public class GRPCChannelManager implements BootService, Runnable {
         connectCheckFuture = Executors.newSingleThreadScheduledExecutor(
             new DefaultNamedThreadFactory("GRPCChannelManager")
         ).scheduleAtFixedRate(
+                // 心跳检查,skywalking通过随机选择一个oap节点并保持长连接的方式来代替负载均衡,如果连接不通重新选择一个节点
             new RunnableWithExceptionProtection(
                 this,
                 t -> LOGGER.error("unexpected exception.", t)

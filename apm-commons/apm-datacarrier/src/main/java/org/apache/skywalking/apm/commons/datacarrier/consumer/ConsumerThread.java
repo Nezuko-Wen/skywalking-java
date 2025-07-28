@@ -50,6 +50,7 @@ public class ConsumerThread<T> extends Thread {
 
         final List<T> consumeList = new ArrayList<T>(1500);
         while (running) {
+            // 消费缓冲数据
             if (!consume(consumeList)) {
                 try {
                     Thread.sleep(consumeCycle);
@@ -67,11 +68,13 @@ public class ConsumerThread<T> extends Thread {
 
     private boolean consume(List<T> consumeList) {
         for (DataSource dataSource : dataSources) {
+            // 将数据读取到consumeList
             dataSource.obtain(consumeList);
         }
 
         if (!consumeList.isEmpty()) {
             try {
+                // 数据消费
                 consumer.consume(consumeList);
             } catch (Throwable t) {
                 consumer.onError(consumeList, t);
@@ -90,6 +93,9 @@ public class ConsumerThread<T> extends Thread {
 
     /**
      * DataSource is a reference to {@link Buffer}.
+     */
+    /**
+     * 存储数据
      */
     class DataSource {
         private QueueBuffer<T> sourceBuffer;
